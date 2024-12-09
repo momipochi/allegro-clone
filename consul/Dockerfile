@@ -1,5 +1,5 @@
 # Use the official Consul image as the base
-FROM consul:latest
+FROM  hashicorp/consul:latest
 
 # Optional: You can copy custom configuration files into the container
 # Copy a custom configuration file into the Consul container

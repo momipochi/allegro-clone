@@ -1,10 +1,8 @@
 # vault.hcl
-
-# Enable Consul as the storage backend
-storage "consul" {
-  address = "localhost:8500"  # Consul address
-  path    = "vault/"          # The path to store Vault data in Consul
+service_registration "consul" {
+  address      = "127.0.0.1:8500"
 }
+
 
 # Enable the Consul listener for Vault's API
 listener "tcp" {
