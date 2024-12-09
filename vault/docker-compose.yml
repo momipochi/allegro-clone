@@ -1,0 +1,16 @@
+services:
+  vault:
+    build:
+      context: .
+    container_name: vault
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: "https://127.0.0.1:8200"
+    volumes:
+      - ./config:/vault/config
+      - ./certs:/vault/certs # Mount certificates
+      - ./data:/vault/data # Persist Vault storage
+    cap_add:
+      - IPC_LOCK
+    restart: unless-stopped

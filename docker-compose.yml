@@ -1,0 +1,10 @@
+services:
+  consul:
+    extends:
+      file: ./consul/docker-compose.yml
+      service: consul
+
+  vault:
+    extends:
+      file: ./vault/docker-compose.yml
+      service: vault
