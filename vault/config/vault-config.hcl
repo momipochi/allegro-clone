@@ -14,8 +14,8 @@ listener "tcp" {
 ui = true
 
 # API and cluster address
-api_addr = "https://127.0.0.1:8200"
-cluster_addr = "https://127.0.0.1:8201"
+# api_addr = "https://127.0.0.1:8200"
+# cluster_addr = "https://127.0.0.1:8201"
 
 # Telemetry for monitoring
 telemetry {

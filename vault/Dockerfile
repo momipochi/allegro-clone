@@ -13,4 +13,4 @@ COPY config/vault-config.hcl $VAULT_CONFIG_DIR/vault-config.hcl
 EXPOSE 8200
 
 # Run Vault with the specified configuration
-CMD ["server", "-config=/vault/config/vault-config.hcl"]
+CMD ["server"]

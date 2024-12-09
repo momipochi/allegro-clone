@@ -1,10 +1,21 @@
 services:
-  consul:
-    extends:
-      file: ./consul/docker-compose.yml
-      service: consul
-
   vault:
-    extends:
-      file: ./vault/docker-compose.yml
-      service: vault
+    build:
+      context: ./vault # Path to the Dockerfile directory
+      dockerfile: Dockerfile
+    container_name: vault
+    ports:
+      - "8200:8200" # Expose Vault API and Web UI
+    environment:
+      VAULT_ADDR: "https://127.0.0.1:8200" # Vault server address
+    volumes:
+      - ./vault/config:/vault/config # Mount Vault configuration
+      - ./vault/certs:/vault/certs # Mount certificates
+      - ./vault/data:/vault/data # Persist Vault storage
+    cap_add:
+      - IPC_LOCK # Required to lock memory (security reason)
+    restart: unless-stopped
+
+networks:
+  consul_network:
+    driver: bridge # Use the default bridge network driver for communication
