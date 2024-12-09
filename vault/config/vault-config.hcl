@@ -3,7 +3,7 @@ storage "file" {
   path = "/vault/data"
 }
 
-# Listener: Enable secure communication with TLS
+# Listener: Use the mounted certificates
 listener "tcp" {
   address     = "0.0.0.0:8200"
   tls_cert_file = "/vault/certs/vault.crt"
