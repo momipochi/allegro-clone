@@ -1,10 +1,12 @@
 
 service_registration "consul" {
-  address      = "127.0.0.1:8500"
+  address      = "http://consul:8500"
+  
+  
 }
 listener "tcp" {
-  address     = "127.0.0.1:8200"
-  tls_disable = 1
+  address = "[::]:8200"
+  tls_disable = "false"
   tls_cert_file = "/vault/certs/vault.crt"
   tls_key_file  = "/vault/certs/vault.key"
 }
@@ -14,7 +16,7 @@ storage "raft" {
   node_id = "node1"       
 }
 
-
-api_addr = "https://127.0.0.1:8200"
-cluster_addr = "https://127.0.0.1:8201"
+node_name = "Vault server"
+api_addr = "http://vault:8200"
+cluster_addr = "https://vault:8201"
 ui = true
