@@ -25,6 +25,8 @@ services:
       - ./vault/config:/vault/config # Mount Vault configuration
       - ./vault/certs:/vault/certs # Mount certificates
       - ./vault/data:/vault/data # Persist Vault storage
+      - ./vault/data:/vault/scripts # Persist Vault storage
+      - ./vault:/vault
     cap_add:
       - IPC_LOCK # Required to lock memory (security reason)
     restart: unless-stopped
