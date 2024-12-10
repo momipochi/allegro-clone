@@ -5,6 +5,8 @@ FROM  hashicorp/consul:latest
 # Copy a custom configuration file into the Consul container
 # COPY consul-config.json /consul/config/
 
+COPY config/consul-config.hcl /consul/config/consul-config.hcl
+
 # Expose the ports Consul uses
 EXPOSE 8500 8600/udp
 
