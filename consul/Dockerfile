@@ -11,4 +11,4 @@ COPY config/consul-config.hcl /consul/config/consul-config.hcl
 EXPOSE 8500 8600/udp
 
 # Optional: Run Consul agent with custom configurations (if needed)
-CMD ["agent", "-dev", "-client=0.0.0.0"]
+CMD ["agent", "-client=0.0.0.0"]

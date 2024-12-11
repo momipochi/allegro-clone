@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consul
+  labels:
+    app: consul
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consul
+  template:
+    metadata:
+      labels:
+        app: consul
+    spec:
+      containers:
+        - name: consul
+          image: allegro-clone-consul:latest  # Replace with your custom Consul image
+          ports:
+            - containerPort: 8500 # Consul UI and HTTP API
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consul
+  labels:
+    app: consul
+spec:
+  selector:
+    app: consul
+  ports:
+    - protocol: TCP
+      port: 8500  # Expose the UI/API port
+      targetPort: 8500
