@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: consul
-          image: allegro-clone-consul:latest  # Replace with your custom Consul image
+          image: anderalextu/allegro-clone-consul:latest  # Replace with your custom Consul image
           ports:
             - containerPort: 8500 # Consul UI and HTTP API
 ---

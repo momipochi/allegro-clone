@@ -8,3 +8,24 @@ build:
 clean:
 	make -C $(CONSUL_MAKE) clean
 	make -C $(AUTH_SERVICE_MAKE) clean
+
+push:
+	make -C $(CONSUL_MAKE) push
+	make -C $(AUTH_SERVICE_MAKE) push
+
+login:
+	docker login
+
+deploy:
+	
+	make -C $(CONSUL_MAKE) deploy
+	make -C $(AUTH_SERVICE_MAKE) deploy
+
+undeploy:
+	make -C $(CONSUL_MAKE) undeploy
+	make -C $(AUTH_SERVICE_MAKE) undeploy
+
+
+up: login build push deploy
+
+down: undeploy clean
