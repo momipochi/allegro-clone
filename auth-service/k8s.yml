@@ -1,3 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: default
+  labels:
+    app: auth-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: auth-service
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: auth-service
+  namespace: default
+automountServiceAccountToken: true
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceDefaults
+metadata:
+  name: auth-service
+  namespace: default
+spec:
+  protocol: "http"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -12,10 +42,12 @@ spec:
   template:
     metadata:
       annotations:
-        consul.hashicorp.com/connect-inject: "true" # Enables sidecar injection for service mesh
+        consul.hashicorp.com/connect-inject: "true"
       labels:
+        service: auth-service
         app: auth-service
     spec:
+      serviceAccountName: auth-service
       containers:
       - name: auth-service
         image: anderalextu/allegro-clone-auth-service:latest # Replace with your container image
