@@ -10,7 +10,7 @@ push:
 clean:
 	docker image rm -f $(IMAGE_NAME)
 
-AUTH_SERVICE_K8S=./k8s.yml
+AUTH_SERVICE_K8S=./k8s.yaml
 
 deploy:
 	kubectl apply -f $(AUTH_SERVICE_K8S)

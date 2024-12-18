@@ -67,7 +67,7 @@ dashboardProviders:
         path: /var/lib/grafana/dashboards/default
 dashboards:
    default:
-     hashicups-monitoring:
+     allegro-clone-monitoring:
        json: |
           {
               "annotations": {
@@ -939,8 +939,8 @@ dashboards:
                 ]
               },
               "timezone": "",
-              "title": "HashiCups",
-              "uid": "hashicups",
+              "title": "AllegroClone",
+              "uid": "allegro-clone",
               "version": 9,
               "weekStart": ""
             }

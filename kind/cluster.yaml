@@ -8,3 +8,15 @@ nodes:
     hostPort: 443
     listenAddress: "127.0.0.1"
     protocol: TCP
+  - containerPort: 8501
+    hostPort: 8501
+    listenAddress: "127.0.0.1"
+    protocol: TCP
+  - containerPort: 8502
+    hostPort: 8502
+    listenAddress: "127.0.0.1"
+    protocol: TCP
+  - containerPort: 8443
+    hostPort: 8443
+    listenAddress: "127.0.0.1"
+    protocol: TCP

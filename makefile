@@ -29,3 +29,27 @@ undeploy:
 up: login build push deploy
 
 down: undeploy clean
+
+
+start:
+	kind create cluster --config=kind/cluster.yaml
+	helm install --values helm/values-v2.yaml consul hashicorp/consul --create-namespace --namespace consul
+
+	timeout 30
+	kubectl apply --filename auth-service
+	kubectl apply -f proxy/proxy-defaults.yaml
+	timeout 30
+	kubectl apply --filename intentions
+	timeout 5
+	kubectl apply --filename api-gw/consul-api-gateway.yaml --namespace consul
+	timeout 30	
+	kubectl apply --filename api-gw/routes.yaml --namespace consul
+	kubectl apply --filename api-gw/intentions.yaml --namespace consul
+	kubectl apply --filename rabc-reference-grant
+
+	# kubectl port-forward svc/grafana --namespace default 3000:3000 &
+	# kubectl port-forward svc/consul-ui --namespace consul 8501:443
+
+end:
+	helm uninstall consul -n consul
+	kind delete cluster
