@@ -1,0 +1,23 @@
+providers:
+  - name: 'default'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
+  - name: "auth-service-dashboard"
+    folder: "Microservices"
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards
+      disableDeletion: false
+      updateIntervalSeconds: 10
+  - name: "jaeger"
+    folder: "observability"
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards
+      disableDeletion: false
+      updateIntervalSeconds: 10

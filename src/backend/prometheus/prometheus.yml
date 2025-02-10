@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s  # Scrape metrics every 15 seconds
+
+scrape_configs:
+  # Scraping Jaeger Metrics
+  - job_name: 'jaeger'
+    static_configs:
+      - targets: ['jaeger:14269']  # Assuming Jaeger's agent is available on 'jaeger:5775'
+
+  # Scraping your microservices (example for auth-service)
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['auth-service:8080']  # Ensure this is correct for your service
