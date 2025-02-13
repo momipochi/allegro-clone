@@ -1,4 +1,6 @@
 using auth_service.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +20,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () => "Hello World!");
-
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "wwwroot/.well-known")),
+    RequestPath = "/.well-known"  // Ensures requests to /.well-known/ are served correctly
+});
+app.MapGet("/", () => "Hello World!").AllowAnonymous();
+app.MapGet("/hello",[Authorize(AuthenticationSchemes = "PlayingWithSchemes")] () => "PlayingWithSchemes");
 app.Run();
 

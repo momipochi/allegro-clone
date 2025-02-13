@@ -22,9 +22,9 @@ services:
     networks:
       - kafka-network
     volumes:
-      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
       - ./grafana/dashboards/auth-service-dashboard.json:/var/lib/grafana/dashboards/auth-service-dashboard.json
-      - ./grafana/dashboards.yml:/etc/grafana/dashboards.yml
+      - ./grafana/dashboards.yaml:/etc/grafana/dashboards.yaml
   broker:
     image: apache/kafka:latest
     container_name: broker
@@ -50,9 +50,9 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
     command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--config.file=/etc/prometheus/prometheus.yaml"
     ports:
       - "9090:9090"
     networks:
@@ -73,6 +73,19 @@ services:
       ASPNETCORE_URLS: http://+:8080 # Ensure ASP.NET Core listens correctly
     labels:
       - "prometheus-job=auth-service" # Label for Prometheus discovery
+
+  envoy-gateway:
+    image: envoyproxy/envoy:v1.31-latest
+    container_name: envoy-gateway
+    ports:
+      - "9901:9901" # Envoy admin interface
+      - "8081:8081" # Public-facing API Gateway port
+    volumes:
+      - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    depends_on:
+      - auth-service
+    networks:
+      - kafka-network
 
 networks:
   kafka-network:
