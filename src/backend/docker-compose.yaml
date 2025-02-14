@@ -73,6 +73,8 @@ services:
       ASPNETCORE_URLS: http://+:8080 # Ensure ASP.NET Core listens correctly
     labels:
       - "prometheus-job=auth-service" # Label for Prometheus discovery
+    volumes:
+      - ./auth-service/auth-service/Keys:/app/Keys
 
   envoy-gateway:
     image: envoyproxy/envoy:v1.31-latest

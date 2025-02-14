@@ -17,20 +17,19 @@ static_resources:
                       providers:
                         default_provider:
                           payload_in_metadata: 'payload'
-                          issuer: "http://localhost:8080/"
+                          issuer: "auth-service"
                           remote_jwks:
                             http_uri:
                               uri: "http://localhost:8080/.well-known/jwks.json"
                               cluster: auth-service
                               timeout: 1s
-                            # jwks cache
                             cache_duration:
                               seconds: 900
-                            # fetch jwks on proxy startup
                             async_fetch:
                               fast_listener: false
-                          from_cookies:
-                            - accessToken
+                          from_headers:
+                          - name: Authorization
+                            value_prefix: "Bearer "
                       requirement_map:
                         default_req:
                           provider_name: default_provider
@@ -45,13 +44,21 @@ static_resources:
                         - "*"
                       routes:
                         - match:
+                            prefix: '/hello'
+                          route:
+                            cluster: auth-service
+                          typed_per_filter_config:
+                            envoy.filters.http.jwt_authn:
+                              '@type': type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.PerRouteConfig
+                              requirement_name: 'default_req'
+                        # Public route (no authentication needed)
+                        - match:
                             prefix: '/'
                           route:
                             cluster: auth-service
-                      typed_per_filter_config:
-                        envoy.filters.http.jwt_authn:
-                          '@type': type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.PerRouteConfig
-                          requirement_name: 'default_req'
+                          typed_per_filter_config: {}  # No JWT validation applied here (public route)
+
+                        # Private route (JWT authentication required)
   clusters:
     - name: auth-service
       connect_timeout: 1s
