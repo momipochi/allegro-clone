@@ -5,9 +5,13 @@ scrape_configs:
   # Scraping Jaeger Metrics
   - job_name: 'jaeger'
     static_configs:
-      - targets: ['jaeger:14269']  # Assuming Jaeger's agent is available on 'jaeger:5775'
+      - targets: ['localhost:14269']  # Assuming Jaeger's agent is available on 'jaeger:5775'
 
   # Scraping your microservices (example for auth-service)
   - job_name: 'auth-service'
     static_configs:
-      - targets: ['auth-service:8080']  # Ensure this is correct for your service
+      - targets: ['localhost:8080']  # Ensure this is correct for your service
+  - job_name: 'order-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['localhost:9091']

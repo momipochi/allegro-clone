@@ -76,6 +76,18 @@ services:
     volumes:
       - ./auth-service/auth-service/Keys:/app/Keys
 
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order-service
+    ports:
+      - 8888:8888
+      - 8040:8040
+    restart: always
+    networks:
+      - kafka-network
+
   envoy-gateway:
     image: envoyproxy/envoy:v1.31-latest
     container_name: envoy-gateway
@@ -84,6 +96,7 @@ services:
       - "8081:8081" # Public-facing API Gateway port
     volumes:
       - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
+      - ./envoy/descriptors:/etc/envoy/descriptors
     depends_on:
       - auth-service
     networks:

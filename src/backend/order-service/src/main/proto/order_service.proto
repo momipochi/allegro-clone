@@ -1,0 +1,13 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option java_package = "allegro.orderservice.order_service.grpc";
+
+message ServiceResult {
+    bool success = 1;
+    optional string message = 2;
+}
+
+
+service OrderService {
+    rpc TestingGrpc (google.protobuf.Empty) returns (ServiceResult);
+}
