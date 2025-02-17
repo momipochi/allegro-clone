@@ -2,8 +2,10 @@ namespace auth_service.Extensions;
 
 public static class AppExtensions
 {
-    public static WebApplication ConfigureApp(this WebApplication webApplication)
+    public static WebApplication ConfigureApp(this WebApplication app)
     {
-        return webApplication;
+        app.MapPrometheusScrapingEndpoint();
+        app.UseOpenTelemetryPrometheusScrapingEndpoint();
+        return app;
     }
 }

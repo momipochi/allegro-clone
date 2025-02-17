@@ -4,6 +4,9 @@ WORKDIR /app
 COPY . .
 RUN dotnet publish -c Release -o out
 
+
+EXPOSE 8080
+
 # Use .NET runtime for production
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app

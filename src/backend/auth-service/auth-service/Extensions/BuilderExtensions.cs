@@ -1,6 +1,6 @@
-using System.Text;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using Grafana.OpenTelemetry;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Logs;
@@ -25,7 +25,7 @@ public static class BuilderExtensions
 
     public static IHostApplicationBuilder AddAuth(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddAuthentication().AddJwtBearer("PlayingWithSchemes",options =>
+        builder.Services.AddAuthentication().AddJwtBearer("PlayingWithSchemes", options =>
         {
             options.Authority = "http://localhost:8080"; // Your auth-service
             options.Audience = "dummy_audience";
@@ -49,28 +49,33 @@ public static class BuilderExtensions
     }
     public static IHostApplicationBuilder AddHealthCheck(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddHealthChecks().AddCheck("self",()=>HealthCheckResult.Healthy(),["live"]);
+        builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
         return builder;
     }
 
     public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
     {
+        var tracingOtlpEndpoint = "http://jaeger:4317";
+        // Custom metrics for the application
         builder.Services.AddOpenTelemetry()
             .WithTracing(
-            configure =>
-            {
-                configure.AddHttpClientInstrumentation().AddAspNetCoreInstrumentation().AddOtlpExporter(options =>
+                tracing =>
                 {
-                    options.Endpoint = new Uri("http://jaeger:4317");
-                });;
-                configure.UseGrafana().AddOtlpExporter();
-            })
-            .WithMetrics(configure =>
-            {
-                configure.UseGrafana().AddPrometheusExporter();
-                
-            });
+
+                    tracing.AddHttpClientInstrumentation().AddAspNetCoreInstrumentation().AddOtlpExporter(options =>
+                    {
+                        options.Endpoint = new Uri(tracingOtlpEndpoint);
+                    });
+                    // tracing.UseGrafana().AddOtlpExporter();
+                })
+            .WithMetrics(metrics =>
+                {
+                    metrics.AddPrometheusExporter();
+                    metrics.AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel");
+                }
+
+            );
         builder.Logging.AddOpenTelemetry(options =>
         {
             options.UseGrafana().AddConsoleExporter();
