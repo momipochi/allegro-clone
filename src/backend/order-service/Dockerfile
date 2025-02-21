@@ -10,4 +10,5 @@ WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar java.jar
 EXPOSE 8040
 EXPOSE 8888
-CMD ["java", "-jar", "java.jar"]
+ENTRYPOINT ["java", "-jar", "java.jar"]
+HEALTHCHECK --interval=3s --timeout=5s --retries=5 CMD curl --fail http://localhost:8080/actuator/health || exit 1

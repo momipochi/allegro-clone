@@ -1,14 +1,18 @@
 services:
   jaeger:
-    image: ${REGISTRY:-}jaegertracing/all-in-one:${JAEGER_VERSION:-latest}
+    image: jaegertracing/all-in-one:${JAEGER_VERSION:-latest}
     ports:
-      - "16686:16686"
-      - "4317:4317"
-      - "4318:4318"
+      - "16686:16686" # Jaeger UI
+      - "4317:4317" # OpenTelemetry gRPC (not used by Envoy)
+      - "4318:4318" # OpenTelemetry HTTP (not used by Envoy)
+      - "14250:14250" # Jaeger agent for gRPC ingestion
+      - "14268:14268" # Jaeger collector HTTP endpoint (used by Envoy)
+      - "9411:9411" # Zipkin-compatible API (used by Envoy)
     environment:
       - LOG_LEVEL=debug
     networks:
       - kafka-network
+
   grafana:
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -99,6 +103,26 @@ services:
       - ./envoy/descriptors:/etc/envoy/descriptors
     depends_on:
       - auth-service
+      - order-service-proxy
+
+    networks:
+      - kafka-network
+  order-service-proxy:
+    image: envoyproxy/envoy:v1.31-latest
+    container_name: order-service-proxy
+    command:
+      - "--service-node order-service-proxy"
+      - "--service-cluster order-service-proxy"
+      - "--config-path /etc/envoy/envoy.yaml"
+    ports:
+      - "9902:9902" # Envoy admin interface
+      - "8082:8082" # Public-facing API Gateway port
+    volumes:
+      - ./order-service/envoy/envoy.yaml:/etc/envoy/envoy.yaml
+      - ./envoy/descriptors:/etc/envoy/descriptors
+    depends_on:
+      order-service:
+        condition: service_healthy
     networks:
       - kafka-network
 

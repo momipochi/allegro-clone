@@ -1,8 +1,8 @@
-compose:
-	docker compose -f ./docker-compose.yaml up -d
 
-rebuild:
+build:
 	docker compose up -d --build
 
 down:
 	docker compose down
+
+rebuild: down build
