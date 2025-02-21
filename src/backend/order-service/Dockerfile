@@ -11,4 +11,4 @@ COPY --from=builder /app/build/libs/*.jar java.jar
 EXPOSE 8040
 EXPOSE 8888
 ENTRYPOINT ["java", "-jar", "java.jar"]
-HEALTHCHECK --interval=3s --timeout=5s --retries=5 CMD curl --fail http://localhost:8080/actuator/health || exit 1
+HEALTHCHECK --interval=1s --timeout=1s --retries=60 CMD curl --fail http://localhost:8080/actuator/health || exit 1

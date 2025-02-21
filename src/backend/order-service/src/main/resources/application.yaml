@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: order-service
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+grpc:
+  server:
+    port: 8888
+  enableReflection: true
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+          - health
+      path-mapping:
+        prometheus: prometheus
+  endpoint:
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
+  health:
+    defaults:
+      enable: true

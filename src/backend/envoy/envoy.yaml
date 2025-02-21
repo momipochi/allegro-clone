@@ -81,6 +81,10 @@ static_resources:
                             grpc: {}
                           route:
                             cluster: order-service                        
+                          typed_per_filter_config:
+                            envoy.filters.http.jwt_authn:
+                              '@type': type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.PerRouteConfig
+                              requirement_name: 'default_req'
                         - match:
                             prefix: '/auth'
                           route:

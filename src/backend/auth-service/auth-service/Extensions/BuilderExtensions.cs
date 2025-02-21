@@ -15,7 +15,7 @@ public static class BuilderExtensions
     public static IHostApplicationBuilder ConfigureApp(this IHostApplicationBuilder builder)
     {
         builder.AddHealthCheck();
-        builder.ConfigureOpenTelemetry();
+        // builder.ConfigureOpenTelemetry();
         builder.Services.AddServiceDiscovery();
         builder.AddAuth();
         builder.Services.AddAuthorization();
